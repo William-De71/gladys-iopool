@@ -1,0 +1,305 @@
+{
+  "devices": {
+    "pool": {
+      "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000",
+      "should_poll": false,
+      "params": ["IOPOOL_POOL_ID", "IOPOOL_ECO_ID"],
+      "features": [
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:temperature",
+          "category": "temperature-sensor",
+          "type": "decimal",
+          "unit": "celsius",
+          "min": -10,
+          "max": 50,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:ph",
+          "category": "ph-sensor",
+          "type": "decimal",
+          "unit": "ph",
+          "min": 0,
+          "max": 14,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:orp",
+          "category": "orp-sensor",
+          "type": "decimal",
+          "unit": "millivolt",
+          "min": 0,
+          "max": 1200,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:filtration",
+          "category": "duration",
+          "type": "integer",
+          "unit": "minutes",
+          "min": 0,
+          "max": 1440,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:action_required",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:iopool:pool:1aaa22b3-ccc4-4567-d888-e999ff000000:pool_mode",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ],
+      "options": []
+    }
+  },
+  "manifest": {
+    "config_schema": [
+      {
+        "key": "intro",
+        "type": "section"
+      },
+      {
+        "key": "api_key",
+        "type": "secret"
+      },
+      {
+        "key": "options_intro",
+        "type": "section"
+      },
+      {
+        "key": "poll_interval",
+        "type": "number"
+      },
+      {
+        "key": "language",
+        "type": "select"
+      }
+    ],
+    "scene_triggers": [
+      {
+        "key": "new_measure",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "temperature",
+            "type": "number"
+          },
+          {
+            "key": "ph",
+            "type": "number"
+          },
+          {
+            "key": "orp",
+            "type": "number"
+          },
+          {
+            "key": "measure_mode",
+            "type": "string"
+          },
+          {
+            "key": "is_valid",
+            "type": "boolean"
+          },
+          {
+            "key": "measured_at",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "action_required_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "state",
+            "options": ["required", "resolved"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "pool_mode_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "mode",
+            "options": ["STANDARD", "OPENING", "ACTIVE_WINTER", "WINTER", "INITIALIZATION"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "mode",
+            "type": "string"
+          },
+          {
+            "key": "previous_mode",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "filtration_advice_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "minutes",
+            "type": "number"
+          },
+          {
+            "key": "hours",
+            "type": "number"
+          },
+          {
+            "key": "previous_minutes",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "measures_stopped",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "last_measure_at",
+            "type": "string"
+          },
+          {
+            "key": "hours",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "scene_actions": [
+      {
+        "key": "get_pool",
+        "fields": ["device"],
+        "outputs": [
+          {
+            "key": "temperature",
+            "type": "number"
+          },
+          {
+            "key": "ph",
+            "type": "number"
+          },
+          {
+            "key": "orp",
+            "type": "number"
+          },
+          {
+            "key": "filtration_minutes",
+            "type": "number"
+          },
+          {
+            "key": "action_required",
+            "type": "boolean"
+          },
+          {
+            "key": "pool_mode",
+            "type": "string"
+          },
+          {
+            "key": "measured_at",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "widgets": [
+      {
+        "key": "pool",
+        "settings": ["device", "chart", "interval"],
+        "options": {
+          "chart": ["temperature", "ph", "orp", "filtration", "none"],
+          "interval": ["last-day", "last-three-days", "last-week", "last-month"]
+        }
+      }
+    ]
+  }
+}

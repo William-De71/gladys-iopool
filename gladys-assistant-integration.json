@@ -1,0 +1,1092 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "iopool",
+  "description": {
+    "en": "iopool EcO pool probe: water temperature, pH, redox, filtration advice, scenes, widget.",
+    "fr": "Sonde de piscine iopool EcO : température, pH, redox, conseil de filtration, scènes, widget.",
+    "de": "iopool-EcO-Poolsonde: Wassertemperatur, pH, Redox, Filterempfehlung, Szenen, Widget.",
+    "es": "Sonda de piscina iopool EcO: temperatura, pH, redox, consejo de filtración, escenas, widget."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/william-de71/gladys-iopool:0.1.0",
+  "gladys_version": ">=5.3.0",
+  "categories": ["environment", "appliances"],
+  "keywords": [
+    "piscine",
+    "pool",
+    "spa",
+    "iopool EcO",
+    "ph",
+    "redox",
+    "orp",
+    "filtration",
+    "swimming pool",
+    "qualité eau"
+  ],
+  "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-iopool/main/cover.jpg",
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "iopool account",
+        "fr": "Compte iopool",
+        "de": "iopool-Konto",
+        "es": "Cuenta iopool"
+      },
+      "description": {
+        "en": "In the iopool app, open Settings: your API key is at the bottom of the page. Copy it here. The integration reads your pools through the official iopool API, read-only: no data goes elsewhere.",
+        "fr": "Dans l’application iopool, ouvrez les Paramètres : votre clé API est tout en bas de la page. Copiez-la ici. L’intégration lit vos bassins par l’API officielle d’iopool, en lecture seule : aucune donnée ne part ailleurs.",
+        "de": "Öffnen Sie in der iopool-App die Einstellungen: Ihr API-Schlüssel steht ganz unten auf der Seite. Kopieren Sie ihn hierher. Die Integration liest Ihre Pools über die offizielle iopool-API, nur lesend: Keine Daten gehen anderswohin.",
+        "es": "En la aplicación iopool, abra los Ajustes: su clave API está abajo del todo. Cópiela aquí. La integración lee sus piscinas mediante la API oficial de iopool, solo lectura: ningún dato va a otro sitio."
+      }
+    },
+    {
+      "key": "api_key",
+      "type": "secret",
+      "label": {
+        "en": "API key",
+        "fr": "Clé API",
+        "de": "API-Schlüssel",
+        "es": "Clave API"
+      },
+      "required": true
+    },
+    {
+      "key": "options_intro",
+      "type": "section",
+      "label": {
+        "en": "Options",
+        "fr": "Options",
+        "de": "Optionen",
+        "es": "Opciones"
+      },
+      "description": {
+        "en": "The iopool EcO probe sends a measure about once an hour. Each reading is one request to the iopool API, for every pool of the account.",
+        "fr": "La sonde iopool EcO envoie une mesure environ une fois par heure. Chaque lecture est une requête à l’API iopool, pour tous les bassins du compte.",
+        "de": "Die iopool-EcO-Sonde sendet etwa einmal pro Stunde eine Messung. Jedes Lesen ist eine Anfrage an die iopool-API, für alle Pools des Kontos.",
+        "es": "La sonda iopool EcO envía una medida aproximadamente una vez por hora. Cada lectura es una petición a la API de iopool, para todas las piscinas de la cuenta."
+      }
+    },
+    {
+      "key": "poll_interval",
+      "type": "number",
+      "label": {
+        "en": "Reading interval (min)",
+        "fr": "Intervalle de lecture (min)",
+        "de": "Leseintervall (Min.)",
+        "es": "Intervalo de lectura (min)"
+      },
+      "description": {
+        "en": "5 to 60 minutes, 10 by default.",
+        "fr": "De 5 à 60 minutes, 10 par défaut.",
+        "de": "5 bis 60 Minuten, standardmäßig 10.",
+        "es": "De 5 a 60 minutos, 10 por defecto."
+      },
+      "min": 5,
+      "max": 60,
+      "default": 10,
+      "required": false
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
+      "description": {
+        "en": "Feature names, pool modes and scene summaries. Automatic: the language of your dashboard, once the iopool widget has been displayed.",
+        "fr": "Noms des fonctionnalités, modes du bassin et résumés des scènes. Automatique : la langue de votre tableau de bord, dès que le widget iopool a été affiché.",
+        "de": "Namen der Funktionen, Poolmodi und Szenen-Zusammenfassungen. Automatisch: die Sprache Ihres Dashboards, sobald das iopool-Widget angezeigt wurde.",
+        "es": "Nombres de las funciones, modos de la piscina y resúmenes de las escenas. Automático: el idioma de su panel, en cuanto se haya mostrado el widget de iopool."
+      },
+      "options": [
+        {
+          "value": "auto",
+          "label": {
+            "en": "Automatic",
+            "fr": "Automatique",
+            "de": "Automatisch",
+            "es": "Automático"
+          }
+        },
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
+        }
+      ],
+      "default": "auto",
+      "required": false
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the API key",
+        "fr": "Tester la clé API",
+        "de": "API-Schlüssel testen",
+        "es": "Probar la clave API"
+      },
+      "description": {
+        "en": "Reads the iopool API with this key and counts the pools of the account.",
+        "fr": "Lit l’API iopool avec cette clé et compte les bassins du compte.",
+        "de": "Liest die iopool-API mit diesem Schlüssel und zählt die Pools des Kontos.",
+        "es": "Lee la API de iopool con esta clave y cuenta las piscinas de la cuenta."
+      },
+      "timeout_seconds": 30
+    }
+  ],
+  "widgets": [
+    {
+      "key": "pool",
+      "label": {
+        "en": "Pool water",
+        "fr": "Eau de la piscine",
+        "de": "Poolwasser",
+        "es": "Agua de la piscina"
+      },
+      "description": {
+        "en": "Temperature, pH, redox and filtration, their history, and what iopool asks.",
+        "fr": "Température, pH, redox et filtration, leur historique, et ce que demande iopool.",
+        "de": "Temperatur, pH, Redox und Filterung, ihr Verlauf und was iopool verlangt.",
+        "es": "Temperatura, pH, redox y filtración, su historial, y lo que pide iopool."
+      },
+      "icon": "droplet",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "Leave empty for the first pool of the account.",
+            "fr": "Laissez vide pour le premier bassin du compte.",
+            "de": "Leer lassen für den ersten Pool des Kontos.",
+            "es": "Déjelo vacío para la primera piscina de la cuenta."
+          },
+          "required": false
+        },
+        {
+          "key": "chart",
+          "type": "select",
+          "label": {
+            "en": "Chart",
+            "fr": "Graphique",
+            "de": "Diagramm",
+            "es": "Gráfico"
+          },
+          "description": {
+            "en": "Shown once the pool device is created in Gladys.",
+            "fr": "Affiché dès que l’appareil du bassin est créé dans Gladys.",
+            "de": "Wird angezeigt, sobald das Gerät des Pools in Gladys angelegt ist.",
+            "es": "Se muestra en cuanto el dispositivo de la piscina está creado en Gladys."
+          },
+          "options": [
+            {
+              "value": "temperature",
+              "label": {
+                "en": "Water temperature",
+                "fr": "Température de l’eau",
+                "de": "Wassertemperatur",
+                "es": "Temperatura del agua"
+              }
+            },
+            {
+              "value": "ph",
+              "label": {
+                "en": "pH",
+                "fr": "pH",
+                "de": "pH-Wert",
+                "es": "pH"
+              }
+            },
+            {
+              "value": "orp",
+              "label": {
+                "en": "Redox",
+                "fr": "Redox",
+                "de": "Redox",
+                "es": "Redox"
+              }
+            },
+            {
+              "value": "filtration",
+              "label": {
+                "en": "Recommended filtration",
+                "fr": "Filtration recommandée",
+                "de": "Empfohlene Filterung",
+                "es": "Filtración recomendada"
+              }
+            },
+            {
+              "value": "none",
+              "label": {
+                "en": "No chart",
+                "fr": "Pas de graphique",
+                "de": "Kein Diagramm",
+                "es": "Sin gráfico"
+              }
+            }
+          ],
+          "default": "temperature",
+          "required": false
+        },
+        {
+          "key": "interval",
+          "type": "select",
+          "label": {
+            "en": "Chart period",
+            "fr": "Période du graphique",
+            "de": "Zeitraum des Diagramms",
+            "es": "Periodo del gráfico"
+          },
+          "options": [
+            {
+              "value": "last-day",
+              "label": {
+                "en": "Last 24 hours",
+                "fr": "Dernières 24 heures",
+                "de": "Letzte 24 Stunden",
+                "es": "Últimas 24 horas"
+              }
+            },
+            {
+              "value": "last-three-days",
+              "label": {
+                "en": "Last 3 days",
+                "fr": "3 derniers jours",
+                "de": "Letzte 3 Tage",
+                "es": "Últimos 3 días"
+              }
+            },
+            {
+              "value": "last-week",
+              "label": {
+                "en": "Last 7 days",
+                "fr": "7 derniers jours",
+                "de": "Letzte 7 Tage",
+                "es": "Últimos 7 días"
+              }
+            },
+            {
+              "value": "last-month",
+              "label": {
+                "en": "Last 30 days",
+                "fr": "30 derniers jours",
+                "de": "Letzte 30 Tage",
+                "es": "Últimos 30 días"
+              }
+            }
+          ],
+          "default": "last-week",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "new_measure",
+      "label": {
+        "en": "iopool: new measure",
+        "fr": "iopool : nouvelle mesure",
+        "de": "iopool: neue Messung",
+        "es": "iopool: nueva medida"
+      },
+      "description": {
+        "en": "The probe sent a new measure, about once an hour. Checked every 10 minutes by default.",
+        "fr": "La sonde a envoyé une nouvelle mesure, environ une fois par heure. Vérifié toutes les 10 minutes par défaut.",
+        "de": "Die Sonde hat eine neue Messung gesendet, etwa einmal pro Stunde. Standardmäßig alle 10 Minuten geprüft.",
+        "es": "La sonda envió una nueva medida, aproximadamente una vez por hora. Se comprueba cada 10 minutos por defecto."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One of the iopool pools. Leave empty for any pool.",
+            "fr": "Un des bassins iopool. Laissez vide pour tous les bassins.",
+            "de": "Einer der iopool-Pools. Leer lassen für jeden Pool.",
+            "es": "Una de las piscinas iopool. Déjelo vacío para cualquier piscina."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "temperature",
+          "type": "number",
+          "label": {
+            "en": "Water temperature (°C)",
+            "fr": "Température de l’eau (°C)",
+            "de": "Wassertemperatur (°C)",
+            "es": "Temperatura del agua (°C)"
+          }
+        },
+        {
+          "key": "ph",
+          "type": "number",
+          "label": {
+            "en": "pH",
+            "fr": "pH",
+            "de": "pH-Wert",
+            "es": "pH"
+          }
+        },
+        {
+          "key": "orp",
+          "type": "number",
+          "label": {
+            "en": "Redox (mV)",
+            "fr": "Redox (mV)",
+            "de": "Redox (mV)",
+            "es": "Redox (mV)"
+          }
+        },
+        {
+          "key": "measure_mode",
+          "type": "string",
+          "label": {
+            "en": "Measure mode",
+            "fr": "Mode de mesure",
+            "de": "Messmodus",
+            "es": "Modo de medida"
+          },
+          "description": {
+            "en": "How the probe took the measure: standard, live, maintenance, manual, backup or gateway.",
+            "fr": "Comment la sonde a pris la mesure : standard, live, maintenance, manual, backup ou gateway.",
+            "de": "Wie die Sonde gemessen hat: standard, live, maintenance, manual, backup oder gateway.",
+            "es": "Cómo tomó la sonda la medida: standard, live, maintenance, manual, backup o gateway."
+          }
+        },
+        {
+          "key": "is_valid",
+          "type": "boolean",
+          "label": {
+            "en": "Valid measure",
+            "fr": "Mesure valide",
+            "de": "Gültige Messung",
+            "es": "Medida válida"
+          },
+          "description": {
+            "en": "False when iopool did not validate the measure.",
+            "fr": "Faux quand iopool n’a pas validé la mesure.",
+            "de": "Falsch, wenn iopool die Messung nicht bestätigt hat.",
+            "es": "Falso cuando iopool no validó la medida."
+          }
+        },
+        {
+          "key": "measured_at",
+          "type": "string",
+          "label": {
+            "en": "Measured at",
+            "fr": "Mesuré à",
+            "de": "Gemessen um",
+            "es": "Medido a las"
+          },
+          "description": {
+            "en": "Date and time of the measure, ISO 8601 (UTC).",
+            "fr": "Date et heure de la mesure, ISO 8601 (UTC).",
+            "de": "Datum und Uhrzeit der Messung, ISO 8601 (UTC).",
+            "es": "Fecha y hora de la medida, ISO 8601 (UTC)."
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "action_required_changed",
+      "label": {
+        "en": "iopool: action required",
+        "fr": "iopool : action requise",
+        "de": "iopool: Handlung erforderlich",
+        "es": "iopool: acción requerida"
+      },
+      "description": {
+        "en": "The iopool app starts asking for an action on the water (or no longer does).",
+        "fr": "L’application iopool se met à demander une action sur l’eau (ou n’en demande plus).",
+        "de": "Die iopool-App verlangt eine Handlung am Wasser (oder nicht mehr).",
+        "es": "La aplicación iopool empieza a pedir una acción sobre el agua (o deja de pedirla)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One of the iopool pools. Leave empty for any pool.",
+            "fr": "Un des bassins iopool. Laissez vide pour tous les bassins.",
+            "de": "Einer der iopool-Pools. Leer lassen für jeden Pool.",
+            "es": "Una de las piscinas iopool. Déjelo vacío para cualquier piscina."
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Change",
+            "fr": "Changement",
+            "de": "Änderung",
+            "es": "Cambio"
+          },
+          "description": {
+            "en": "Leave empty for both.",
+            "fr": "Laissez vide pour les deux.",
+            "de": "Leer lassen für beide.",
+            "es": "Déjelo vacío para ambos."
+          },
+          "options": [
+            {
+              "value": "required",
+              "label": {
+                "en": "An action is required",
+                "fr": "Une action est requise",
+                "de": "Eine Handlung ist erforderlich",
+                "es": "Se requiere una acción"
+              }
+            },
+            {
+              "value": "resolved",
+              "label": {
+                "en": "No more action required",
+                "fr": "Plus aucune action requise",
+                "de": "Keine Handlung mehr erforderlich",
+                "es": "Ya no se requiere ninguna acción"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Change",
+            "fr": "Changement",
+            "de": "Änderung",
+            "es": "Cambio"
+          },
+          "description": {
+            "en": "required or resolved.",
+            "fr": "required ou resolved.",
+            "de": "required oder resolved.",
+            "es": "required o resolved."
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "pool_mode_changed",
+      "label": {
+        "en": "iopool: pool mode changed",
+        "fr": "iopool : mode du bassin changé",
+        "de": "iopool: Poolmodus geändert",
+        "es": "iopool: modo de la piscina cambiado"
+      },
+      "description": {
+        "en": "The pool moved to another mode in the iopool app: standard, opening, active or passive wintering.",
+        "fr": "Le bassin est passé dans un autre mode dans l’application iopool : standard, remise en route, hivernage actif ou passif.",
+        "de": "Der Pool ist in der iopool-App in einen anderen Modus gewechselt: Standard, Saisonstart, aktive oder passive Überwinterung.",
+        "es": "La piscina pasó a otro modo en la aplicación iopool: estándar, puesta en marcha, invernaje activo o pasivo."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One of the iopool pools. Leave empty for any pool.",
+            "fr": "Un des bassins iopool. Laissez vide pour tous les bassins.",
+            "de": "Einer der iopool-Pools. Leer lassen für jeden Pool.",
+            "es": "Una de las piscinas iopool. Déjelo vacío para cualquier piscina."
+          },
+          "required": false
+        },
+        {
+          "key": "mode",
+          "type": "multi_select",
+          "label": {
+            "en": "New mode",
+            "fr": "Nouveau mode",
+            "de": "Neuer Modus",
+            "es": "Nuevo modo"
+          },
+          "description": {
+            "en": "Leave empty for any mode.",
+            "fr": "Laissez vide pour tous les modes.",
+            "de": "Leer lassen für jeden Modus.",
+            "es": "Déjelo vacío para cualquier modo."
+          },
+          "options": [
+            {
+              "value": "STANDARD",
+              "label": {
+                "en": "Standard",
+                "fr": "Standard",
+                "de": "Standard",
+                "es": "Estándar"
+              }
+            },
+            {
+              "value": "OPENING",
+              "label": {
+                "en": "Opening",
+                "fr": "Remise en route",
+                "de": "Saisonstart",
+                "es": "Puesta en marcha"
+              }
+            },
+            {
+              "value": "ACTIVE_WINTER",
+              "label": {
+                "en": "Active wintering",
+                "fr": "Hivernage actif",
+                "de": "Aktive Überwinterung",
+                "es": "Invernaje activo"
+              }
+            },
+            {
+              "value": "WINTER",
+              "label": {
+                "en": "Passive wintering",
+                "fr": "Hivernage passif",
+                "de": "Passive Überwinterung",
+                "es": "Invernaje pasivo"
+              }
+            },
+            {
+              "value": "INITIALIZATION",
+              "label": {
+                "en": "Initialization",
+                "fr": "Initialisation",
+                "de": "Initialisierung",
+                "es": "Inicialización"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "mode",
+          "type": "string",
+          "label": {
+            "en": "New mode",
+            "fr": "Nouveau mode",
+            "de": "Neuer Modus",
+            "es": "Nuevo modo"
+          },
+          "description": {
+            "en": "STANDARD, OPENING, ACTIVE_WINTER, WINTER or INITIALIZATION.",
+            "fr": "STANDARD, OPENING, ACTIVE_WINTER, WINTER ou INITIALIZATION.",
+            "de": "STANDARD, OPENING, ACTIVE_WINTER, WINTER oder INITIALIZATION.",
+            "es": "STANDARD, OPENING, ACTIVE_WINTER, WINTER o INITIALIZATION."
+          }
+        },
+        {
+          "key": "previous_mode",
+          "type": "string",
+          "label": {
+            "en": "Previous mode",
+            "fr": "Mode précédent",
+            "de": "Vorheriger Modus",
+            "es": "Modo anterior"
+          },
+          "description": {
+            "en": "STANDARD, OPENING, ACTIVE_WINTER, WINTER or INITIALIZATION.",
+            "fr": "STANDARD, OPENING, ACTIVE_WINTER, WINTER ou INITIALIZATION.",
+            "de": "STANDARD, OPENING, ACTIVE_WINTER, WINTER oder INITIALIZATION.",
+            "es": "STANDARD, OPENING, ACTIVE_WINTER, WINTER o INITIALIZATION."
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "filtration_advice_changed",
+      "label": {
+        "en": "iopool: filtration advice changed",
+        "fr": "iopool : conseil de filtration changé",
+        "de": "iopool: Filterempfehlung geändert",
+        "es": "iopool: consejo de filtración cambiado"
+      },
+      "description": {
+        "en": "iopool changed the recommended daily filtration duration (it follows the water temperature): adjust the pump schedule.",
+        "fr": "iopool a changé la durée de filtration quotidienne recommandée (elle suit la température de l’eau) : adaptez la programmation de la pompe.",
+        "de": "iopool hat die empfohlene tägliche Filterdauer geändert (sie folgt der Wassertemperatur): Passen Sie den Pumpenplan an.",
+        "es": "iopool cambió la duración de filtración diaria recomendada (sigue la temperatura del agua): ajuste la programación de la bomba."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One of the iopool pools. Leave empty for any pool.",
+            "fr": "Un des bassins iopool. Laissez vide pour tous les bassins.",
+            "de": "Einer der iopool-Pools. Leer lassen für jeden Pool.",
+            "es": "Una de las piscinas iopool. Déjelo vacío para cualquier piscina."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "label": {
+            "en": "Recommended filtration (min/day)",
+            "fr": "Filtration recommandée (min/jour)",
+            "de": "Empfohlene Filterung (Min./Tag)",
+            "es": "Filtración recomendada (min/día)"
+          }
+        },
+        {
+          "key": "hours",
+          "type": "number",
+          "label": {
+            "en": "Recommended filtration (h/day)",
+            "fr": "Filtration recommandée (h/jour)",
+            "de": "Empfohlene Filterung (Std./Tag)",
+            "es": "Filtración recomendada (h/día)"
+          }
+        },
+        {
+          "key": "previous_minutes",
+          "type": "number",
+          "label": {
+            "en": "Previous recommendation (min/day)",
+            "fr": "Recommandation précédente (min/jour)",
+            "de": "Vorherige Empfehlung (Min./Tag)",
+            "es": "Recomendación anterior (min/día)"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "measures_stopped",
+      "label": {
+        "en": "iopool: measures stopped",
+        "fr": "iopool : mesures interrompues",
+        "de": "iopool: Messungen ausgeblieben",
+        "es": "iopool: medidas interrumpidas"
+      },
+      "description": {
+        "en": "No new measure for 24 hours (battery, Wi-Fi, gateway). Not in passive wintering, where the probe is out of the water.",
+        "fr": "Aucune nouvelle mesure depuis 24 heures (pile, Wi-Fi, passerelle). Pas en hivernage passif, où la sonde est hors de l’eau.",
+        "de": "Seit 24 Stunden keine neue Messung (Batterie, WLAN, Gateway). Nicht bei passiver Überwinterung, wo die Sonde außerhalb des Wassers ist.",
+        "es": "Ninguna medida nueva desde hace 24 horas (pila, wifi, pasarela). No en invernaje pasivo, donde la sonda está fuera del agua."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "One of the iopool pools. Leave empty for any pool.",
+            "fr": "Un des bassins iopool. Laissez vide pour tous les bassins.",
+            "de": "Einer der iopool-Pools. Leer lassen für jeden Pool.",
+            "es": "Una de las piscinas iopool. Déjelo vacío para cualquier piscina."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "last_measure_at",
+          "type": "string",
+          "label": {
+            "en": "Last measure at",
+            "fr": "Dernière mesure à",
+            "de": "Letzte Messung um",
+            "es": "Última medida a las"
+          },
+          "description": {
+            "en": "ISO 8601 (UTC).",
+            "fr": "ISO 8601 (UTC).",
+            "de": "ISO 8601 (UTC).",
+            "es": "ISO 8601 (UTC)."
+          }
+        },
+        {
+          "key": "hours",
+          "type": "number",
+          "label": {
+            "en": "Hours without a measure",
+            "fr": "Heures sans mesure",
+            "de": "Stunden ohne Messung",
+            "es": "Horas sin medida"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_pool",
+      "label": {
+        "en": "iopool: read a pool",
+        "fr": "iopool : lire un bassin",
+        "de": "iopool: Pool lesen",
+        "es": "iopool: leer una piscina"
+      },
+      "description": {
+        "en": "The latest measure and the advice of a pool, for a message or a condition.",
+        "fr": "La dernière mesure et les conseils d’un bassin, pour un message ou une condition.",
+        "de": "Die letzte Messung und die Empfehlungen eines Pools, für eine Nachricht oder eine Bedingung.",
+        "es": "La última medida y los consejos de una piscina, para un mensaje o una condición."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "Leave empty for the first pool of the account.",
+            "fr": "Laissez vide pour le premier bassin du compte.",
+            "de": "Leer lassen für den ersten Pool des Kontos.",
+            "es": "Déjelo vacío para la primera piscina de la cuenta."
+          },
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "key": "temperature",
+          "type": "number",
+          "label": {
+            "en": "Water temperature (°C)",
+            "fr": "Température de l’eau (°C)",
+            "de": "Wassertemperatur (°C)",
+            "es": "Temperatura del agua (°C)"
+          },
+          "description": {
+            "en": "-1 when iopool did not send it.",
+            "fr": "-1 si iopool ne l’a pas envoyé.",
+            "de": "-1, wenn iopool es nicht gesendet hat.",
+            "es": "-1 si iopool no lo ha enviado."
+          }
+        },
+        {
+          "key": "ph",
+          "type": "number",
+          "label": {
+            "en": "pH",
+            "fr": "pH",
+            "de": "pH-Wert",
+            "es": "pH"
+          },
+          "description": {
+            "en": "-1 when iopool did not send it.",
+            "fr": "-1 si iopool ne l’a pas envoyé.",
+            "de": "-1, wenn iopool es nicht gesendet hat.",
+            "es": "-1 si iopool no lo ha enviado."
+          }
+        },
+        {
+          "key": "orp",
+          "type": "number",
+          "label": {
+            "en": "Redox (mV)",
+            "fr": "Redox (mV)",
+            "de": "Redox (mV)",
+            "es": "Redox (mV)"
+          },
+          "description": {
+            "en": "-1 when iopool did not send it.",
+            "fr": "-1 si iopool ne l’a pas envoyé.",
+            "de": "-1, wenn iopool es nicht gesendet hat.",
+            "es": "-1 si iopool no lo ha enviado."
+          }
+        },
+        {
+          "key": "filtration_minutes",
+          "type": "number",
+          "label": {
+            "en": "Recommended filtration (min/day)",
+            "fr": "Filtration recommandée (min/jour)",
+            "de": "Empfohlene Filterung (Min./Tag)",
+            "es": "Filtración recomendada (min/día)"
+          },
+          "description": {
+            "en": "-1 when iopool did not send it.",
+            "fr": "-1 si iopool ne l’a pas envoyé.",
+            "de": "-1, wenn iopool es nicht gesendet hat.",
+            "es": "-1 si iopool no lo ha enviado."
+          }
+        },
+        {
+          "key": "action_required",
+          "type": "boolean",
+          "label": {
+            "en": "Action required",
+            "fr": "Action requise",
+            "de": "Handlung erforderlich",
+            "es": "Acción requerida"
+          }
+        },
+        {
+          "key": "pool_mode",
+          "type": "string",
+          "label": {
+            "en": "Pool mode",
+            "fr": "Mode du bassin",
+            "de": "Poolmodus",
+            "es": "Modo de la piscina"
+          },
+          "description": {
+            "en": "STANDARD, OPENING, ACTIVE_WINTER, WINTER or INITIALIZATION.",
+            "fr": "STANDARD, OPENING, ACTIVE_WINTER, WINTER ou INITIALIZATION.",
+            "de": "STANDARD, OPENING, ACTIVE_WINTER, WINTER oder INITIALIZATION.",
+            "es": "STANDARD, OPENING, ACTIVE_WINTER, WINTER o INITIALIZATION."
+          }
+        },
+        {
+          "key": "measured_at",
+          "type": "string",
+          "label": {
+            "en": "Measured at",
+            "fr": "Mesuré à",
+            "de": "Gemessen um",
+            "es": "Medido a las"
+          },
+          "description": {
+            "en": "Date and time of the measure, ISO 8601 (UTC).",
+            "fr": "Date et heure de la mesure, ISO 8601 (UTC).",
+            "de": "Datum und Uhrzeit der Messung, ISO 8601 (UTC).",
+            "es": "Fecha y hora de la medida, ISO 8601 (UTC)."
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein Satz, fertig für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    }
+  ]
+}
